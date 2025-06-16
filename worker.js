@@ -51,12 +51,12 @@ function makeReadableWebSocketStream(ws, earlyDataHeader, log) {
                     }
                     controller.close();
                 } catch (error2) {
-                    log(websocketStream can't close DUE to , error2);
+                    log("websocketStream can't close DUE to", error2);
                 }
             });
             const { earlyData, error } = base64ToArrayBuffer(earlyDataHeader);
             if (error) {
-                log(earlyDataHeader has invaild base64);
+                log("earlyDataHeader has invalid base64");
                 safeCloseWebSocket(ws);
                 return;
             }
@@ -67,7 +67,7 @@ function makeReadableWebSocketStream(ws, earlyDataHeader, log) {
         pull(controller) {
         },
         cancel(reason) {
-            log(websocketStream is cancel DUE to , reason);
+            log("websocketStream is cancel DUE to", reason);
             if (readableStreamCancel) {
                 return;
             }
@@ -127,7 +127,7 @@ function processVlessHeader(vlessBuffer, userID) {
     } else {
         return {
             hasError: true,
-            message: command ${command} is not support, command 01-tcp,02-udp,03-mux
+            message: `command ${command} is not support, command 01-tcp,02-udp,03-mux`
         };
     }
     const portIndex = 18 + optLength + 1;
@@ -169,12 +169,12 @@ function processVlessHeader(vlessBuffer, userID) {
             addressValue = ipv6.join(":");
             break;
         default:
-            console.log(invild  addressType is ${addressType});
+            console.log(`invalid addressType is ${addressType}`);
     }
     if (!addressValue) {
         return {
             hasError: true,
-            message: addressValue is empty, addressType is ${addressType}
+            message: `addressValue is empty, addressType is ${addressType}`
         };
     }
     return {
@@ -201,18 +201,18 @@ var cf_worker_vless_default = {
         const userID = env.UUID || "da3812c9-9ce8-4738-8bbd-b20530a541fa"; // ENTER YOUR OWN UUID HERE
         const isVaildUUID = validate_default(userID);
         const log = (info, event) => {
-            console.log([${address}:${portWithRandomLog}] ${info}, event || "");
+            console.log(`[${address}:${portWithRandomLog}] ${info}`, event || "");
         };
         const upgradeHeader = request.headers.get("Upgrade");
         if (!upgradeHeader || upgradeHeader !== "websocket") {
             return new Response(
-                <html>
+                `<html>
 <head><title>404 Not Found</title></head>
 <body>
 <center><h1>404 Not Found ${isVaildUUID ? "_-_" : ""}</h1></center>
 <hr><center>nginx/1.23.4</center>
 </body>
-</html>,
+</html>`,
                 {
                     status: 404,
                     headers: {
@@ -253,7 +253,7 @@ var cf_worker_vless_default = {
                         isUDP
                     } = processVlessHeader(chunk, userID);
                     address = addressRemote || "";
-                    portWithRandomLog = ${portRemote}--${Math.random()} ${isUDP ? "udp " : "tcp "} ;
+                    portWithRandomLog = `${portRemote}--${Math.random()} ${isUDP ? "udp " : "tcp "} `;
                     if (isUDP && portRemote != 53) {
                         controller.error("UDP proxy only enable for DNS which is port 53");
                         webSocket.close();
@@ -270,7 +270,7 @@ var cf_worker_vless_default = {
                         hostname: addressRemote,
                         port: portRemote
                     });
-                    log(connected);
+                    log("connected");
                     const writer = remoteSocket.writable.getWriter();
                     await writer.write(rawClientData);
                     writer.releaseLock();
@@ -278,12 +278,12 @@ var cf_worker_vless_default = {
                 },
                 close() {
                     console.log(
-                        [${address}:${portWithRandomLog}] readableWebSocketStream is close
+                        `[${address}:${portWithRandomLog}] readableWebSocketStream is close`
                     );
                 },
                 abort(reason) {
                     console.log(
-                        [${address}:${portWithRandomLog}] readableWebSocketStream is abort,
+                        `[${address}:${portWithRandomLog}] readableWebSocketStream is abort`,
                         JSON.stringify(reason)
                     );
                 }
@@ -313,19 +313,19 @@ var cf_worker_vless_default = {
                     },
                     close() {
                         console.log(
-                            [${address}:${portWithRandomLog}] remoteConnection!.readable is close
+                            `[${address}:${portWithRandomLog}] remoteConnection!.readable is close`
                         );
                     },
                     abort(reason) {
                         console.error(
-                            [${address}:${portWithRandomLog}] remoteConnection!.readable abort,
+                            `[${address}:${portWithRandomLog}] remoteConnection!.readable abort`,
                             reason
                         );
                     }
                 })
             ).catch((error) => {
                 console.error(
-                    [${address}:${portWithRandomLog}] processWebSocket has exception ,
+                    `[${address}:${portWithRandomLog}] processWebSocket has exception `,
                     error.stack || error
                 );
                 safeCloseWebSocket2(webSocket);
